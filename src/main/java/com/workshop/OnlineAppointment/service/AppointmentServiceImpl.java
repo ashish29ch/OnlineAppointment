@@ -3,6 +3,8 @@ package com.workshop.OnlineAppointment.service;
 import com.workshop.OnlineAppointment.entity.Appointment;
 import com.workshop.OnlineAppointment.entity.Status;
 import com.workshop.OnlineAppointment.repository.AppointmentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;

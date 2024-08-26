@@ -3,6 +3,8 @@ package com.workshop.OnlineAppointment.controller;
 import com.workshop.OnlineAppointment.entity.Appointment;
 import com.workshop.OnlineAppointment.entity.Status;
 import com.workshop.OnlineAppointment.service.AppointmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,11 @@ import java.util.Optional;
 public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
-
+    private final Logger LOGGER = LoggerFactory.getLogger(AppointmentController.class);
     @PostMapping
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment){
         try {
+            LOGGER.info("Inside Create Appointment of AppointmentController");
             if (appointment.getAppointmentDate().isBefore(LocalDate.now())) {
                 return ResponseEntity.badRequest().body(null);
             }
