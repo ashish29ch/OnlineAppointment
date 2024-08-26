@@ -16,4 +16,8 @@ public interface AppointmentService {
     public Appointment updateAppointmentStatus(Long appointmentId, Status newStatus);
 
     public void cancelAppointment(Long appointmentId);
+
+    public Appointment bookAppointment(Appointment appointment);
+
+    public boolean isDoctorAvailable(String doctorName);
 }

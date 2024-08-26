@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AppointmentServiceImpl implements AppointmentService{
     @Autowired
@@ -37,6 +38,24 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public void cancelAppointment(Long appointmentId) {
         appointmentRepository.deleteById(appointmentId);
+    }
+
+    @Override
+    public Appointment bookAppointment(Appointment appointment) {
+        if (appointment.getAppointmentDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Appointment date cannot be in the past.");
+        }
+        // Save the appointment details to the database
+        return appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public boolean isDoctorAvailable(String doctorName) {
+        List<Appointment> appointments = getAppointmentsByDoctor(doctorName);
+        appointments.stream().filter(appointment ->
+                        appointment.getAppointmentDate().isEqual(LocalDate.now()))
+                .collect(Collectors.toList());
+        return appointments.size()>5;
     }
 
 }

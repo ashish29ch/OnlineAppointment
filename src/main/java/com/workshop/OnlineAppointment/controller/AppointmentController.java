@@ -20,8 +20,18 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment){
-        Appointment savedAppointment = appointmentService.createAppointment(appointment);
-        return ResponseEntity.ok(savedAppointment);
+        try {
+            if (appointment.getAppointmentDate().isBefore(LocalDate.now())) {
+                return ResponseEntity.badRequest().body(null);
+            }
+            if (!appointmentService.isDoctorAvailable(appointment.getDoctorName())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            }
+            Appointment bookedAppointment = appointmentService.bookAppointment(appointment);
+            return ResponseEntity.status(HttpStatus.CREATED).body(bookedAppointment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
     @GetMapping("/by-date")
     public ResponseEntity<List<Appointment>> getAppointmentsByDate(@RequestParam("date") LocalDate date) {
